@@ -1,0 +1,72 @@
+/* You can add global styles to this file, and also import other style files */
+
+.container {
+    margin: 0 auto;
+    max-width: 1900px;
+}
+
+body {
+    background-color: black;
+}
+
+button {
+    min-width: 50px;
+}
+
+textarea {
+    background-color: rgb(228, 228, 228) !important;
+    font-size: 12px !important;
+}
+
+.scrolling-panel-container {
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.scrolling-panel {
+    display: inline-block;
+    width: 4000px;
+    height: 150px;
+}
+
+html {
+    scrollbar-face-color: #646464;
+    scrollbar-base-color: #646464;
+    scrollbar-3dlight-color: #646464;
+    scrollbar-highlight-color: #646464;
+    scrollbar-track-color: #000;
+    scrollbar-arrow-color: #000;
+    scrollbar-shadow-color: #646464;
+    scrollbar-dark-shadow-color: #646464;
+}
+
+ ::-webkit-scrollbar {
+    width: 8px;
+    height: 5px;
+}
+
+ ::-webkit-scrollbar-button {
+    background-color: #666;
+}
+
+ ::-webkit-scrollbar-track {
+    background-color: #646464;
+}
+
+ ::-webkit-scrollbar-track-piece {
+    background-color: #000;
+}
+
+ ::-webkit-scrollbar-thumb {
+    height: 50px;
+    background-color: #666;
+    border-radius: 3px;
+}
+
+ ::-webkit-scrollbar-corner {
+    background-color: #646464;
+}
+
+ ::-webkit-resizer {
+    background-color: #666;
+}
