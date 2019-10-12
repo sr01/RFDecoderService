@@ -9,7 +9,7 @@ export default router.get('/', function(req, res, next) {
     res.send(`Welocme to decoder !
     Decode request:
     POST / 
-    body: { times : Array<number> }
+    body: { times : Array<number> } 
     `);
 });
 

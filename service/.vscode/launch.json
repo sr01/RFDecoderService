@@ -8,22 +8,30 @@
             "type": "node",
             "request": "launch",
             "name": "node",
-            "program": "${workspaceFolder}/bin/www"
+            "program": "${workspaceFolder}/bin/www.ts",
+            "preLaunchTask": "tsc: build - tsconfig.json",
+            "outFiles": [
+                "${workspaceFolder}/out/**/*.js"
+            ]
         },
         {
             "type": "node",
-            "request": "launch",
-            "name": "nodemon",
-            "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/nodemon",
-            "program": "${workspaceFolder}/bin/www"
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "nodemon-debug",
-            "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/nodemon",
-            "program": "${workspaceFolder}/bin/www",
+            "request": "attach",
+            "name": "nodemon attach",
+            "processId": "${command:PickProcess}",
             "restart": true,
+            "protocol": "inspector"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "nodemon without debug",
+            "runtimeExecutable": "nodemon",
+            "program": "${workspaceFolder}/bin/www.ts",
+            "preLaunchTask": "tsc: build - tsconfig.json",
+            "outFiles": [
+                "${workspaceFolder}/out/**/*.js"
+            ],
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
         }
