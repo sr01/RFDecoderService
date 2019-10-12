@@ -3,18 +3,45 @@
     "version": "0.0.0",
     "private": true,
     "scripts": {
-        "start": "node ./bin/www",
-        "debug": "nodemon --inspect ./bin/www"
+        "start": "node -r ts-node/register ./bin/www",
+        "debug": "nodemon"
     },
     "dependencies": {
         "cookie-parser": "~1.4.4",
         "debug": "~2.6.9",
         "express": "~4.16.1",
         "http-errors": "~1.6.3",
-        "jade": "~1.11.0",
-        "morgan": "~1.9.1"
+        "morgan": "~1.9.1",
+        "pino": "^5.13.4",
+        "pug": "^2.0.4"
     },
     "devDependencies": {
-        "nodemon": "^1.19.3"
+        "@types/cookie-parser": "^1.4.2",
+        "@types/debug": "^4.1.5",
+        "@types/express": "^4.17.1",
+        "@types/http-errors": "^1.6.2",
+        "@types/morgan": "^1.7.37",
+        "@types/node": "^12.7.12",
+        "@types/pino": "^5.8.10",
+        "nodemon": "^1.19.3",
+        "pino-pretty": "^3.2.1",
+        "shelljs": "^0.8.3",
+        "ts-lint": "^4.5.1",
+        "ts-node": "^8.4.1",
+        "tslint": "^5.20.0",
+        "typescript": "^3.6.4"
+    },
+    "nodemonConfig": {
+        "ignore": [
+            "**/*.test.ts",
+            "**/*.spec.ts",
+            ".git",
+            "node_modules"
+        ],
+        "watch": [
+            "./"
+        ],
+        "exec": "npm start",
+        "ext": "ts"
     }
 }

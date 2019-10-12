@@ -4,9 +4,11 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var debug = require('debug')('rfdecoderservice:server');
-var http = require('http');
+import app from '../app';
+import debug from 'debug';
+//var debug = require('debug')('rfdecoderservice:server');
+import http from 'http';
+import os from 'os';
 
 /**
  * Get port from environment and store in Express.
@@ -33,12 +35,12 @@ server.on('listening', onListening);
  * Normalize a port into a number, string, or false.
  */
 
-function normalizePort(val) {
-  var port = parseInt(val, 10);
+function normalizePort(v : any) {
+  var port = parseInt(v, 10);
 
   if (isNaN(port)) {
     // named pipe
-    return val;
+    return v;
   }
 
   if (port >= 0) {
@@ -53,7 +55,7 @@ function normalizePort(val) {
  * Event listener for HTTP server "error" event.
  */
 
-function onError(error) {
+function onError(error : any) {
   if (error.syscall !== 'listen') {
     throw error;
   }
@@ -85,6 +87,6 @@ function onListening() {
   var addr = server.address();
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
-    : 'port ' + addr.port;
+    : 'port ' + (addr != null ? addr.port : "undefined port!");
   debug('Listening on ' + bind);
 }

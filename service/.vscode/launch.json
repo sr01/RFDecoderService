@@ -8,21 +8,21 @@
             "type": "node",
             "request": "launch",
             "name": "node",
-            "program": "${workspaceFolder}/service/bin/www"
+            "program": "${workspaceFolder}/bin/www"
         },
         {
             "type": "node",
             "request": "launch",
             "name": "nodemon",
-            "runtimeExecutable": "${workspaceFolder}/service/node_modules/.bin/nodemon",
-            "program": "${workspaceFolder}/service/bin/www"
+            "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/nodemon",
+            "program": "${workspaceFolder}/bin/www"
         },
         {
             "type": "node",
             "request": "launch",
             "name": "nodemon-debug",
-            "runtimeExecutable": "${workspaceFolder}/service/node_modules/.bin/nodemon",
-            "program": "${workspaceFolder}/service/bin/www",
+            "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/nodemon",
+            "program": "${workspaceFolder}/bin/www",
             "restart": true,
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
