@@ -8,7 +8,14 @@ import logger from 'morgan';
 import indexRouter from './routes/index';
 import usersRouter from './routes/users';
 import decoderRouter from './routes/decoder';
+import codesRouter from './routes/codes';
+import Settings from './Settings';
 
+console.log(`
+===================================================================
+appRoot: ${Settings.getInstance().appRoot}
+===================================================================
+`)
 var app = express();
 
 // view engine setup
@@ -24,6 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/decoder', decoderRouter);
+app.use('/codes', codesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req: Request, res: Response, next: any) {
