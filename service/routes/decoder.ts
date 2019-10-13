@@ -1,11 +1,10 @@
 import express from 'express';
-import { Application } from 'express';
 import * as Decoder from "../model/decoder";
+import { DecodeRequest } from '../model/DecodeRequest';
 
-// var express = require('express');
 var router = express.Router();
 
-export default router.get('/', function(req, res, next) {
+export default router.get('/', function(req: express.Request, res: express.Response, next : express.NextFunction) {
     res.send(`Welocme to decoder !
     Decode request:
     POST / 
@@ -13,10 +12,9 @@ export default router.get('/', function(req, res, next) {
     `);
 });
 
-router.post('/', function(req, res, next) {
-    console.log(req.body.times);
-    let decodeResult = Decoder.decode(req.body.times, Decoder.Levels.Low, 50);
+router.post('/', function(req: express.Request, res: express.Response, next : express.NextFunction) {
+    const decodeRequest = DecodeRequest.fromData(req.body);
+    console.log(decodeRequest);
+    let decodeResult = Decoder.decode(decodeRequest.times, decodeRequest.startLevel, decodeRequest.threshold);
     res.send(decodeResult);
 });
-
-// module.exports = router;

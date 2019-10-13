@@ -1,17 +1,5 @@
-export enum Levels {
-    Low = 0,
-        High = 1
-}
-
-export class DecodeResult {
-    buckets: Array < number > ;
-    values: Array < number > ;
-
-    constructor(buckets: Array < number > , values: Array < number > ) {
-        this.buckets = buckets;
-        this.values = values;
-    }
-}
+import { DecodeResult } from "./DecodeResult";
+import { Levels } from "./Levels";
 
 export function decode(times: Array < number > , startLevel: Levels, threshold: number): DecodeResult {
 
@@ -24,7 +12,7 @@ export function decode(times: Array < number > , startLevel: Levels, threshold: 
         decoded.push(bucketIndex);
     })
 
-    return new DecodeResult(buckets, decoded);
+    return new DecodeResult(buckets, decoded, startLevel, threshold);
 }
 
 function createBuckets(times: Array < number > , threshold: number): Array < number > {
@@ -50,7 +38,7 @@ function createBuckets(times: Array < number > , threshold: number): Array < num
     }
 
     return groups
-}
+} 
 
 function findBucket(buckets: Array < number > , time: number): number {
     let ds = buckets.map(function(bucket, index) {
