@@ -11,7 +11,7 @@ let codeRepository = new CodeRepository();
 let ajv = new Ajv({ allErrors: true });
 
 router.post('/GetCodesRequest', function (req: express.Request, res: express.Response, next: express.NextFunction) {
-    
+
     let valid = ajv.validate(GetCodesRequestSchema, req.body);
 
     if (!valid) {
@@ -25,7 +25,7 @@ router.post('/GetCodesRequest', function (req: express.Request, res: express.Res
 
         codeRepository.get(getCodesRequest.name, function (err: Error, codes: Array<Code>) {
             if (err) {
-                res.send(`error: ${err.message}`)
+                next(err);
             } else {
                 res.send(codes);
             }
@@ -36,19 +36,19 @@ router.post('/GetCodesRequest', function (req: express.Request, res: express.Res
 router.post('/AddCodeRequest', function (req: express.Request, res: express.Response, next: express.NextFunction) {
 
     let valid = ajv.validate(AddCodeRequestSchema, req.body);
-    
+
     if (!valid) {
         console.log(ajv.errors);
         res.status(HttpStatus.BAD_REQUEST);
         res.send(ajv.errors!.map(err => `${err.dataPath} ${err.message}`));
-    
+
     } else {
         const addCodeRequest = AddCodeRequest.fromData(req.body);
         console.log(`addCodeRequest: ${JSON.stringify(addCodeRequest)}`);
 
         codeRepository.put(addCodeRequest.code, (err, code) => {
             if (err) {
-                res.send(`error: ${err.message}`)
+                next(err);
             } else {
                 res.send(`success`);
             }

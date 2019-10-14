@@ -18,10 +18,6 @@ appRoot: ${Settings.getInstance().appRoot}
 `)
 var app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -35,7 +31,8 @@ app.use('/codes', codesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req: Request, res: Response, next: any) {
-    next(createError(404));
+    res.status(404);
+    res.json({ 'status': false });
 });
 
 // error handler
@@ -46,7 +43,7 @@ app.use(function (err: any, req: Request, res: Response, next: any) {
 
     // render the error page
     res.status(err.status || 500);
-    res.render('error');
+    res.json({ 'status': false, 'message': res.locals.error.message });
 });
 
 export default app;

@@ -30,7 +30,7 @@ router.post('/DecodeRequest', function (req: express.Request, res: express.Respo
             let code = new Code(decodeRequest.name, decodeResult.values);
             codeRepository.put(code, (err, code) => {
                 if (err) {
-                    res.send(`error: ${err.message}`)
+                    next(err);
                 } else {
                     res.send(decodeResult); 
                 }
