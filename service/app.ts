@@ -4,17 +4,19 @@ import { Request, Response } from 'express';
 import * as path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
-
+import fs from 'fs';
 import indexRouter from './routes/index';
 import decoderRouter from './routes/decoder';
 import codesRouter from './routes/codes';
-import Settings from './Settings';
+import appRoot from './approot'
+import Settings from './model/settings/Settings';
 
+console.log(fs.readFileSync(path.join(appRoot, 'title.txt')).toString());
 console.log(`
-===================================================================
-appRoot: ${Settings.getInstance().appRoot}
-===================================================================
-`)
+appRoot: ${appRoot}
+Settings: ${Settings.getInstance().toString()}
+`);
+
 var app = express();
 
 app.use(logger('dev'));
