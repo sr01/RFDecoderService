@@ -1,10 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
 
-.container {
-    margin: 0 auto;
-    max-width: 1900px;
-}
-
 body {
     background-color: black;
 }
