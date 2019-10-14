@@ -12,13 +12,15 @@ export class CodeRepository {
         console.log(`dbPath: ${this.dbPath}`);
     }
 
-    put(code: Code) {
-        this.db.insert(code)
+    put(code: Code, callback : (err: Error, codes : Code) => void) {
+        this.db.insert(code, function(err : Error, code : Code){
+            callback(err, code);
+        })
     }
 
     get(name: String, callback : (err: Error, codes : Array<Code>) => void) {
         this.db.find({name : name}, function(err : Error, codes : Array<Code>){
-            callback(err, codes)
+            callback(err, codes);
         });
     }
 }

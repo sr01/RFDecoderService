@@ -15,3 +15,15 @@ export class GetCodesRequest {
         return new GetCodesRequest(data.name);
     }
 }
+
+export let GetCodesRequestSchema =
+{
+    "properties": {
+        "name": {
+            "type": "string",
+            "minLength" : 3,
+            "maxLength" : 250
+        }
+    },
+    "required": ["name"]
+};

@@ -1,7 +1,8 @@
 import { Code } from "./Code";
 
 export interface AddCodeRequestData {
-    code: Code;
+    name: String,
+    values: Array<number>
 }
 
 export class AddCodeRequest {
@@ -12,6 +13,27 @@ export class AddCodeRequest {
     }
 
     static fromData(data: AddCodeRequestData): AddCodeRequest {
-        return new AddCodeRequest(data.code);
+        return new AddCodeRequest(new Code(data.name, data.values));
     }
 }
+
+export let AddCodeRequestSchema =
+{
+    "properties": {
+        "name": {
+            "type": "string",
+            "minLength" : 3,
+            "maxLength" : 250
+        },
+        "values": { 
+            "type": "array",
+            "items": [
+                {
+                    "type": "integer"
+                }
+            ],
+            "minItems" : 1
+        }
+    },
+    "required": ["name", "values"]
+};
