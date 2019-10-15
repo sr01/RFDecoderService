@@ -1,6 +1,7 @@
 import * as mqtt from 'mqtt';
 import * as ObjectUtils from '../../utils/ObjectUtils';
 import { Code } from '../../model/code/Code';
+import { Packet } from 'mqtt';
 
 export interface MqttClientSettings {
     protocol: string,
@@ -18,6 +19,16 @@ export class SignalMqttClient {
 
     constructor(settings: MqttClientSettings) {
         this.settings = ObjectUtils.copy(settings);
+    }
+
+    publish(topic: string, message: string) {
+        if (this.receivingSignalsClient != null) {
+            this.receivingSignalsClient.publish(topic, message, (error?: Error, packet?: Packet) => {
+                if (error) {
+                    console.error(`[SignalMqttClient] failed to publish, topic: ${topic}, message: ${message}`);
+                }
+            })
+        }
     }
 
     beginReceiveSignals(topic: string, onSignalCallback: (err?: Error, signal?: Array<number>) => void) {
@@ -53,7 +64,7 @@ export class SignalMqttClient {
                         if (signal !== undefined && signal instanceof Array && signal.every(e => typeof e === "number")) {
                             onSignalCallback(undefined, signal);
                         }
-                    } catch (e) { 
+                    } catch (e) {
                         console.error(e)
                     }
                 })
@@ -127,12 +138,16 @@ export class SignalMqttClient {
             })
 
             client.on('message', (topic, buffer) => {
-                let message = buffer.toString();
-                console.debug(`[SignalMqttClient] mqtt received - topic: ${topic}, message: ${message}`);
-                isMessageReceived = true;
-                client.end();
+                try {
+                    let message = buffer.toString();
+                    console.debug(`[SignalMqttClient] mqtt received - topic: ${topic}, message: ${message}`);
+                    isMessageReceived = true;
+                    client.end();
 
-                callback(undefined, message);
+                    callback(undefined, message);
+                } catch (e) {
+                    console.error(e)
+                }
             })
 
             client.on('offline', () => {

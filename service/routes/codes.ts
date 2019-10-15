@@ -17,7 +17,7 @@ router.post('/GetCodesRequest', function (req: express.Request, res: express.Res
         const getCodesRequest = GetCodesRequest.fromData(req.body);
         console.debug(`getCodesRequest: ${JSON.stringify(getCodesRequest)}`);
 
-        codesReceiveManager.getCode(getCodesRequest.name, (err, codes) => {
+        codesReceiveManager.getCode(getCodesRequest.buttonName, (err, codes) => {
             if (err) {
                 next(err);
             } else {
@@ -49,12 +49,15 @@ router.post('/LearnRequest', function (req: express.Request, res: express.Respon
         const learnRequest = LearnRequest.fromData(req.body);
         console.debug(`learnRequest: ${JSON.stringify(learnRequest)}`);
 
-        codesReceiveManager.learnCode(learnRequest.topic, (err, code) => {
+        codesReceiveManager.stop();
+        
+        codesReceiveManager.learnCode(learnRequest.buttonName, learnRequest.receiverTopic, learnRequest.buttonTopic, (err, code) => {
             if (err) {
                 next(err);
             } else {
                 res.send(code);
             }
+            codesReceiveManager.start();
         })
     }
 });

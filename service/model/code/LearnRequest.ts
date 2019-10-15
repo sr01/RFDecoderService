@@ -1,34 +1,42 @@
 export interface LearnRequestData {
-    name: string,
+    buttonName: string,
     description: string,
-    topic: string,
+    receiverTopic: string,
+    buttonTopic: string
 }
 
 export class LearnRequest {
-    name: string;
+    buttonName: string;
     description?: string;
-    topic: string;
+    receiverTopic: string;
+    buttonTopic: string;
 
-    constructor(name: string, topic: string, description?: string) {
-        this.name = name;
-        this.topic = topic;
+    constructor(buttonName: string, receiverTopic: string, buttonTopic: string, description?: string) {
+        this.buttonName = buttonName;
+        this.receiverTopic = receiverTopic;
         this.description = description;
+        this.buttonTopic = buttonTopic;
     }
 
     static fromData(data: LearnRequestData): LearnRequest {
-        return new LearnRequest(data.name, data.topic, data.description);
+        return new LearnRequest(data.buttonName, data.receiverTopic, data.buttonTopic, data.description);
     }
 }
 
 export let LearnRequestSchema =
 {
     "properties": {
-        "name": {
+        "buttonName": {
             "type": "string",
             "minLength": 3,
             "maxLength": 250
         },
-        "topic": {
+        "receiverTopic": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 250
+        },
+        "buttonTopic": {
             "type": "string",
             "minLength": 1,
             "maxLength": 250
@@ -39,5 +47,5 @@ export let LearnRequestSchema =
             "maxLength": 250
         }
     },
-    "required": ["name", "topic"]
+    "required": ["buttonName", "receiverTopic", "buttonTopic"]
 };

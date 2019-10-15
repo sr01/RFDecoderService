@@ -1,8 +1,11 @@
 export class Code {
-    name: String;
-    values: Array<number>;
-    constructor(name: String, values: Array<number>) {
-        this.name = name;
-        this.values = values;
+    buttonName: string;
+    buttonTopic: string;
+    signal: Array<number>;
+    
+    constructor(buttonName: string, buttonTopic: string, signal: Array<number>) {
+        this.buttonName = buttonName;
+        this.buttonTopic = buttonTopic;
+        this.signal = signal;
     }
 }

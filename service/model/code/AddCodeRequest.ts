@@ -1,8 +1,9 @@
 import { Code } from "./Code";
 
 export interface AddCodeRequestData {
-    name: String,
-    values: Array<number>
+    buttonName: string,
+    buttonTopic: string,
+    signal: Array<number>
 }
 
 export class AddCodeRequest {
@@ -13,27 +14,32 @@ export class AddCodeRequest {
     }
 
     static fromData(data: AddCodeRequestData): AddCodeRequest {
-        return new AddCodeRequest(new Code(data.name, data.values));
+        return new AddCodeRequest(new Code(data.buttonName, data.buttonTopic, data.signal));
     }
 }
 
 export let AddCodeRequestSchema =
 {
     "properties": {
-        "name": {
+        "buttonName": {
             "type": "string",
-            "minLength" : 3,
-            "maxLength" : 250
+            "minLength": 3,
+            "maxLength": 250
         },
-        "values": { 
+        "buttonTopic": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 250
+        },
+        "signal": {
             "type": "array",
             "items": [
                 {
                     "type": "integer"
                 }
             ],
-            "minItems" : 1
+            "minItems": 1
         }
     },
-    "required": ["name", "values"]
+    "required": ["buttonName", "buttonTopic", "signal"]
 };

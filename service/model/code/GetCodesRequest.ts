@@ -1,29 +1,29 @@
 import { Code } from "./Code";
 
 export interface GetCodesRequestData {
-    name : string;
+    buttonName : string;
 }
 
 export class GetCodesRequest {
-    name : string;
+    buttonName : string;
 
-    constructor(name: string) {
-        this.name = name;
+    constructor(buttonName: string) {
+        this.buttonName = buttonName;
     }
 
     static fromData(data: GetCodesRequestData): GetCodesRequest {
-        return new GetCodesRequest(data.name);
+        return new GetCodesRequest(data.buttonName);
     }
 }
 
 export let GetCodesRequestSchema =
 {
     "properties": {
-        "name": {
+        "buttonName": {
             "type": "string",
             "minLength" : 3,
             "maxLength" : 250
         }
     },
-    "required": ["name"]
+    "required": ["buttonName"]
 };

@@ -13,28 +13,42 @@ export class CodesReceiveManager {
     private codeRepository = new CodeRepository();
 
     start() {
+        console.log(`[CodesReceiveManager] start`);
+
         this.mqttClient.beginReceiveSignals(DETECT_TOPIC, (err, signal) => {
             if (err) {
                 console.error(`[CodesReceiveManager] receive error: ${err.message}`);
             } else {
                 console.log(`[CodesReceiveManager] received signal: ${signal}`);
+
+                this.codeRepository.findBySignal(signal!, (err, code) => {
+                    if (err) {
+                        console.error(`[CodesReceiveManager] failed to find code. Error: ${err}`);
+                    } else {
+                        if (code) {
+                            console.log(`[CodesReceiveManager] found code: ${code.buttonName}`);
+                            this.mqttClient.publish(code.buttonTopic, "ON")
+                        }
+                    }
+                });
             }
         });
     }
 
     stop() {
+        console.log(`[CodesReceiveManager] stop`);
         this.mqttClient.endReceiveSignals();
     }
 
-    learnCode(topic: string, callback: Callback<Code>) {
+    learnCode(buttonName: string, receiverTopic: string, buttonTopic: string, callback: Callback<Code>) {
 
-        this.mqttClient.getSignalOnce(topic, (err, signal) => {
+        this.mqttClient.getSignalOnce(receiverTopic, (err, signal) => {
             if (err) {
                 callback(err);
             }
             else {
 
-                let code = new Code(name, signal!);
+                let code = new Code(buttonName, buttonTopic, signal!);
                 //2. save code to db
                 this.codeRepository.put(code, (err, code) => {
                     if (err) {
@@ -58,8 +72,8 @@ export class CodesReceiveManager {
         });
     }
 
-    getCode(name: string, callback: Callback<Array<Code>>) {
-        this.codeRepository.get(name, function (err: Error, codes: Array<Code>) {
+    getCode(buttonName: string, callback: Callback<Array<Code>>) {
+        this.codeRepository.get(buttonName, function (err: Error, codes: Array<Code>) {
             if (err) {
                 callback(err);
             } else {
