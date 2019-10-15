@@ -5,6 +5,7 @@ import { DecodeRequest, DecodeRequestSchema } from '../model/decode/DecodeReques
 import { CodeRepository } from '../model/code/CodeRepository';
 import { Code } from '../model/code/Code';
 import Ajv from 'ajv';
+import { validateRequestBody } from '../utils/RequestValidation';
 
 var router = express.Router();
 let ajv = new Ajv({ allErrors: true });
@@ -12,17 +13,9 @@ let codeRepository = new CodeRepository();
 
 router.post('/DecodeRequest', function (req: express.Request, res: express.Response, next: express.NextFunction) {
 
-    let valid = ajv.validate(DecodeRequestSchema, req.body);
-
-    if (!valid) {
-        console.log(ajv.errors);
-        res.status(HttpStatus.BAD_REQUEST);
-        res.send(ajv.errors!.map(err => `${err.dataPath} ${err.message}`));
-
-    } else {
-
+    if (validateRequestBody(req, res, ajv, DecodeRequestSchema)) {
         const decodeRequest = DecodeRequest.fromData(req.body);
-        console.log(`decodeRequest: ${JSON.stringify(decodeRequest)}`);
+        console.debug(`decodeRequest: ${JSON.stringify(decodeRequest)}`);
 
         let decodeResult = Decoder.decode(decodeRequest.times, decodeRequest.startLevel, decodeRequest.threshold);
 
