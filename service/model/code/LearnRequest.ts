@@ -1,8 +1,12 @@
+import { Levels } from "../decode/Levels";
+
 export interface LearnRequestData {
     buttonName: string,
     description: string,
     receiverTopic: string,
-    buttonTopic: string
+    buttonTopic: string,
+    startLevel: Levels,
+    threshold: number;
 }
 
 export class LearnRequest {
@@ -10,16 +14,20 @@ export class LearnRequest {
     description?: string;
     receiverTopic: string;
     buttonTopic: string;
+    startLevel: Levels;
+    threshold: number;
 
-    constructor(buttonName: string, receiverTopic: string, buttonTopic: string, description?: string) {
+    constructor(buttonName: string, receiverTopic: string, buttonTopic: string, startLevel: Levels, threshold: number, description?: string) {
         this.buttonName = buttonName;
         this.receiverTopic = receiverTopic;
         this.description = description;
         this.buttonTopic = buttonTopic;
+        this.startLevel = startLevel;
+        this.threshold = threshold;
     }
 
     static fromData(data: LearnRequestData): LearnRequest {
-        return new LearnRequest(data.buttonName, data.receiverTopic, data.buttonTopic, data.description);
+        return new LearnRequest(data.buttonName, data.receiverTopic, data.buttonTopic, data.startLevel, data.threshold, data.description);
     }
 }
 
@@ -41,11 +49,21 @@ export let LearnRequestSchema =
             "minLength": 1,
             "maxLength": 250
         },
+        "startLevel": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1
+        },
+        "threshold": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+        },
         "description": {
             "type": "string",
             "minLength": 1,
             "maxLength": 250
         }
     },
-    "required": ["buttonName", "receiverTopic", "buttonTopic"]
+    "required": ["buttonName", "receiverTopic", "buttonTopic", "startLevel", "threshold"]
 };

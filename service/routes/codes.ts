@@ -51,7 +51,7 @@ router.post('/LearnRequest', function (req: express.Request, res: express.Respon
 
         codesReceiveManager.stop();
         
-        codesReceiveManager.learnCode(learnRequest.buttonName, learnRequest.receiverTopic, learnRequest.buttonTopic, (err, code) => {
+        codesReceiveManager.learnCode(learnRequest.buttonName, learnRequest.receiverTopic, learnRequest.buttonTopic, learnRequest.startLevel, learnRequest.threshold, (err, code) => {
             if (err) {
                 next(err);
             } else {

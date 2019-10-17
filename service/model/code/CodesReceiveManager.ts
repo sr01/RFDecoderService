@@ -3,7 +3,8 @@ import { SignalMqttClient } from "../../view/mqtt/SignalMqttClient";
 import { Code } from "./Code";
 import { CodeRepository } from "./CodeRepository";
 import { Callback } from "../../utils/Callback";
-
+import * as Decoder from "../decode/Decoder";
+import { Levels } from "../decode/Levels";
 export let DETECT_TOPIC = "rds/detect";
 
 export class CodesReceiveManager {
@@ -40,7 +41,7 @@ export class CodesReceiveManager {
         this.mqttClient.endReceiveSignals();
     }
 
-    learnCode(buttonName: string, receiverTopic: string, buttonTopic: string, callback: Callback<Code>) {
+    learnCode(buttonName: string, receiverTopic: string, buttonTopic: string, startLevel: Levels, threshold: number, callback: Callback<Code>) {
 
         this.mqttClient.getSignalOnce(receiverTopic, (err, signal) => {
             if (err) {
@@ -48,8 +49,11 @@ export class CodesReceiveManager {
             }
             else {
 
-                let code = new Code(buttonName, buttonTopic, signal!);
-                //2. save code to db
+                //2. decode
+                let decodeResult = Decoder.decode(signal!, startLevel, threshold);
+                let code = new Code(buttonName, buttonTopic, decodeResult.values!);
+                
+                //3. save code to db
                 this.codeRepository.put(code, (err, code) => {
                     if (err) {
                         callback(err);
