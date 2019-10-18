@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-import app from '../app';
+import {app, mainLogger} from '../app';
 import debug from 'debug';
 //var debug = require('debug')('rfdecoderservice:server');
 import http from 'http';
@@ -67,11 +67,11 @@ function onError(error : any) {
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
+      mainLogger.error(bind + ' requires elevated privileges');
       process.exit(1);
       break;
     case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
+      mainLogger.error(bind + ' is already in use');
       process.exit(1);
       break;
     default:

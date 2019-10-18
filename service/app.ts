@@ -1,25 +1,39 @@
+import { createLogger, format, transports, Logger, } from 'winston';
+const { combine, timestamp, label, printf } = format;
+const formatter = printf(({ level, message, label, timestamp }) => `${timestamp} ${level} [${label}] ${message}`);
+const mainLogger = createLogger({
+    level: 'debug',
+    format: combine(
+        timestamp({ "format": "DD-MM-YYYY HH:mm:ss.SSS" }),
+        formatter
+    ),
+    transports: [new transports.Console()]
+});
+
 import createError from 'http-errors';
 import express from 'express';
 import { Request, Response } from 'express';
 import * as path from 'path';
 import cookieParser from 'cookie-parser';
-import logger from 'morgan';
+import morgan from 'morgan';
 import fs from 'fs';
 import indexRouter from './routes/index';
 import decoderRouter from './routes/decoder';
 import codesRouter from './routes/codes';
 import appRoot from './approot'
 import Settings from './model/settings/Settings';
+import { CodesReceiveManager } from './model/code/CodesReceiveManager';
 
-console.log(fs.readFileSync(path.join(appRoot, 'title.txt')).toString());
-console.log(`
+mainLogger.info(fs.readFileSync(path.join(appRoot, 'title.txt')).toString());
+mainLogger.info(`
 appRoot: ${appRoot}
 Settings: ${Settings.getInstance().toString()}
 `);
 
+let codesReceiveManager = new CodesReceiveManager();
 var app = express();
 
-app.use(logger('dev'));
+app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -46,4 +60,6 @@ app.use(function (err: any, req: Request, res: Response, next: any) {
     res.json({ 'status': false, 'message': res.locals.error.message });
 });
 
-export default app;
+codesReceiveManager.start();
+
+export  {app, mainLogger, codesReceiveManager};

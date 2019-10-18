@@ -5,6 +5,10 @@ import { CodeRepository } from "./CodeRepository";
 import { Callback } from "../../utils/Callback";
 import * as Decoder from "../decode/Decoder";
 import { Levels } from "../decode/Levels";
+import {mainLogger} from '../../app'
+
+let logger = mainLogger.child({ label: "CodesReceiveManager" });
+
 export let DETECT_TOPIC = "rds/detect";
 
 export class CodesReceiveManager {
@@ -14,20 +18,20 @@ export class CodesReceiveManager {
     private codeRepository = new CodeRepository();
 
     start() {
-        console.log(`[CodesReceiveManager] start`);
+        logger.debug(`start`);
 
         this.mqttClient.beginReceiveSignals(DETECT_TOPIC, (err, signal) => {
             if (err) {
-                console.error(`[CodesReceiveManager] receive error: ${err.message}`);
+                logger.error(`receive error: ${err.message}`);
             } else {
-                console.log(`[CodesReceiveManager] received signal: ${signal}`);
+                logger.debug(`received signal: ${signal}`);
 
                 this.codeRepository.findBySignal(signal!, (err, code) => {
                     if (err) {
-                        console.error(`[CodesReceiveManager] failed to find code. Error: ${err}`);
+                        logger.error(`failed to find code. Error: ${err}`);
                     } else {
                         if (code) {
-                            console.log(`[CodesReceiveManager] found code: ${code.buttonName}`);
+                            logger.debug(`found code: ${code.buttonName}`);
                             this.mqttClient.publish(code.buttonTopic, "ON")
                         }
                     }
@@ -37,7 +41,7 @@ export class CodesReceiveManager {
     }
 
     stop() {
-        console.log(`[CodesReceiveManager] stop`);
+        logger.debug(`stop`);
         this.mqttClient.endReceiveSignals();
     }
 
