@@ -30,14 +30,14 @@ router.post('/GetCodesRequest', function (req: express.Request, res: express.Res
 router.post('/AddCodeRequest', function (req: express.Request, res: express.Response, next: express.NextFunction) {
 
     if (validateRequestBody(req, res, ajv, AddCodeRequestSchema)) {
-        const addCodeRequest = AddCodeRequest.fromData(req.body);
+        const addCodeRequest = new AddCodeRequest(req.body);
         console.debug(`addCodeRequest: ${JSON.stringify(addCodeRequest)}`);
 
-        codesReceiveManager.addCode(addCodeRequest.code, (err, result) => {
+        codesReceiveManager.addCode(addCodeRequest.code, (err, code) => {
             if (err) {
                 next(err);
             } else {
-                res.send(`success`);
+                res.send(code);
             }
         })
     }
@@ -50,8 +50,10 @@ router.post('/LearnRequest', function (req: express.Request, res: express.Respon
         console.debug(`learnRequest: ${JSON.stringify(learnRequest)}`);
 
         codesReceiveManager.stop();
-        
-        codesReceiveManager.learnCode(learnRequest.buttonName, learnRequest.receiverTopic, learnRequest.buttonTopic, learnRequest.startLevel, learnRequest.threshold, (err, code) => {
+
+        const { buttonName, receiverTopic, buttonTopic, startLevel, threshold } = learnRequest;
+
+        codesReceiveManager.learnCode(buttonName, receiverTopic, buttonTopic, startLevel, threshold, (err, code) => {
             if (err) {
                 next(err);
             } else {

@@ -1,9 +1,7 @@
 import { Code } from "./Code";
 
 export interface AddCodeRequestData {
-    buttonName: string,
-    buttonTopic: string,
-    signal: Array<number>
+    code : Code
 }
 
 export class AddCodeRequest {
@@ -12,34 +10,46 @@ export class AddCodeRequest {
     constructor(code: Code) {
         this.code = code;
     }
-
-    static fromData(data: AddCodeRequestData): AddCodeRequest {
-        return new AddCodeRequest(new Code(data.buttonName, data.buttonTopic, data.signal));
-    }
 }
 
 export let AddCodeRequestSchema =
 {
     "properties": {
-        "buttonName": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 250
-        },
-        "buttonTopic": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 250
-        },
-        "signal": {
-            "type": "array",
-            "items": [
-                {
-                    "type": "integer"
+        "code" : {
+            "type": "object",
+            "properties": {
+                "buttonName": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 250
+                },
+                "buttonTopic": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 250
+                },
+                "startLevel": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "threshold": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                "signal": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "integer"
+                        }
+                    ],
+                    "minItems": 1
                 }
-            ],
-            "minItems": 1
-        }
+            },
+            "required": ["buttonName", "buttonTopic","startLevel", "threshold", "signal"]
+        },        
     },
-    "required": ["buttonName", "buttonTopic", "signal"]
+    "required": ["code"]
 };

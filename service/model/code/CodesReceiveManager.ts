@@ -51,7 +51,7 @@ export class CodesReceiveManager {
 
                 //2. decode
                 let decodeResult = Decoder.decode(signal!, startLevel, threshold);
-                let code = new Code(buttonName, buttonTopic, decodeResult.values!);
+                let code = new Code(buttonName, buttonTopic, startLevel, threshold, decodeResult.values!);
                 
                 //3. save code to db
                 this.codeRepository.put(code, (err, code) => {
