@@ -16,6 +16,7 @@ export class SignalMqttClient {
     private settings: MqttClientSettings;
     private isReceivingSignals: boolean = false;
     private receivingSignalsClient: mqtt.MqttClient | null = null;
+    private DEFAULT_TIMEOUT_MILLIS = 30000;
 
     constructor(settings: MqttClientSettings) {
         this.settings = ObjectUtils.copy(settings);
@@ -41,7 +42,6 @@ export class SignalMqttClient {
 
             client.on('connect', () => {
                 console.debug(`[SignalMqttClient] mqtt connect complete`)
-
                 console.debug(`[SignalMqttClient] mqtt subscribe to topic '${topic}'`)
 
                 client.subscribe(topic, (err) => {
@@ -115,16 +115,16 @@ export class SignalMqttClient {
         })
     }
 
-    getMessageOnce(topic: string, callback: (err?: Error, message?: string) => void) {
+    getMessageOnce(topic: string, callback: (err?: Error, message?: string) => void, timeoutMilliseconds: number = this.DEFAULT_TIMEOUT_MILLIS) {
 
         console.debug(`[SignalMqttClient] mqtt connecting...`)
 
         let client = mqtt.connect(this.settings);
-        let isMessageReceived = false;
+        let isWaitingForMessage = true;
+        let timer: NodeJS.Timeout | null = null;
 
         client.on('connect', () => {
             console.debug(`[SignalMqttClient] mqtt connect complete`)
-
             console.debug(`[SignalMqttClient] mqtt subscribe to topic '${topic}'`)
 
             client.subscribe(topic, (err) => {
@@ -134,6 +134,15 @@ export class SignalMqttClient {
                     callback(err);
                 } else {
                     console.debug(`[SignalMqttClient] mqtt subscribe successfully`)
+
+                    console.debug(`[SignalMqttClient] timer set.`)
+
+                    timer = setTimeout(function () {
+                        console.debug(`[SignalMqttClient] timeout!`)
+                        isWaitingForMessage = false;
+                        client.end();
+                        callback(new Error("mqtt receive timeout"));
+                    }, timeoutMilliseconds);
                 }
             })
 
@@ -141,32 +150,37 @@ export class SignalMqttClient {
                 try {
                     let message = buffer.toString();
                     console.debug(`[SignalMqttClient] mqtt received - topic: ${topic}, message: ${message}`);
-                    isMessageReceived = true;
+                    isWaitingForMessage = false;
                     client.end();
 
+                    if (timer) {
+                        clearTimeout(timer);
+                        console.debug(`[SignalMqttClient] timer cleared.`)
+                    }
                     callback(undefined, message);
                 } catch (e) {
                     console.error(e)
+                    callback(e);
                 }
             })
 
             client.on('offline', () => {
                 console.debug(`[SignalMqttClient] mqtt offline`)
-                if (!isMessageReceived) {
+                if (isWaitingForMessage) {
                     callback(Error("mqtt client offline"));
                 }
             });
 
             client.on('disconnect', () => {
                 console.debug(`[SignalMqttClient] mqtt disconnect`)
-                if (!isMessageReceived) {
+                if (isWaitingForMessage) {
                     callback(Error("mqtt client disconnect"));
                 }
             });
 
             client.on('close', () => {
                 console.debug(`[SignalMqttClient] mqtt close`)
-                if (!isMessageReceived) {
+                if (isWaitingForMessage) {
                     callback(Error("mqtt client closed"));
                 }
             });
