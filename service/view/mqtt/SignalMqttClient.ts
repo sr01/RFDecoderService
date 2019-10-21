@@ -2,16 +2,9 @@ import * as mqtt from 'mqtt';
 import * as ObjectUtils from '../../utils/ObjectUtils';
 import { Packet } from 'mqtt';
 import {mainLogger} from '../../app'
+import { MqttClientSettings } from './MqttClientSettings';
 
 let logger = mainLogger.child({ label: "SignalMqttClient" });
-
-export interface MqttClientSettings {
-    protocol: string,
-    host: string,
-    port: number,
-    username: string,
-    password: string
-}
 
 export class SignalMqttClient { 
 
@@ -44,7 +37,7 @@ export class SignalMqttClient {
             let client = mqtt.connect(this.settings);
 
             client.on('connect', () => {
-                logger.debug(`mqtt connect complete`)
+                logger.debug(`mqtt connected.`)
                 logger.debug(`mqtt subscribe to topic '${topic}'`)
 
                 client.subscribe(topic, (err) => {

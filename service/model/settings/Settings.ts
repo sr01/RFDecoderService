@@ -1,5 +1,5 @@
 import * as appSettings from '../../settings-store.json';
-import { MqttClientSettings } from '../../view/mqtt/SignalMqttClient.js';
+import { MqttClientSettings } from "../../view/mqtt/MqttClientSettings";
 
 export default class Settings {
     private static instance: Settings;

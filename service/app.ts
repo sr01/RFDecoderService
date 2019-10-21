@@ -23,6 +23,10 @@ import codesRouter from './routes/codes';
 import appRoot from './approot'
 import Settings from './model/settings/Settings';
 import { CodesReceiveManager } from './model/code/CodesReceiveManager';
+import { MqttPublisher } from './view/mqtt/MqttPublisher';
+import mqttRouter from './routes/mqtt';
+
+const REQUEST_TIMEOUT_MILLIS = 30000;
 
 mainLogger.info(fs.readFileSync(path.join(appRoot, 'title.txt')).toString());
 mainLogger.info(`
@@ -31,6 +35,7 @@ Settings: ${Settings.getInstance().toString()}
 `);
 
 let codesReceiveManager = new CodesReceiveManager();
+let mqttPublisher = new MqttPublisher(Settings.getInstance().mqttClientSettings);
 var app = express();
 
 app.use(morgan('dev'));
@@ -39,9 +44,19 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(function(req, res, next){
+    res.setTimeout(REQUEST_TIMEOUT_MILLIS, function(){
+        console.log('Request has timed out.');
+            res.send(408);
+        });
+
+    next();
+});
+
 app.use('/', indexRouter);
 app.use('/decoder', decoderRouter);
 app.use('/codes', codesRouter);
+app.use('/mqtt', mqttRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req: Request, res: Response, next: any) {
@@ -62,4 +77,4 @@ app.use(function (err: any, req: Request, res: Response, next: any) {
 
 codesReceiveManager.start();
 
-export  {app, mainLogger, codesReceiveManager};
+export  {app, mainLogger, codesReceiveManager, mqttPublisher};
