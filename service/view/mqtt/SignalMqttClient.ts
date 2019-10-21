@@ -54,7 +54,7 @@ export class SignalMqttClient {
                 client.on('message', (topic, buffer) => {
                     try {
                         let message = buffer.toString();
-                        logger.debug(`mqtt received - topic: ${topic}, message: ${message}`);
+                        logger.debug(`mqtt received - topic: ${topic}, message: ${message.substring(0, Math.min(50, message.length))}...`);
 
                         let signal = JSON.parse(message!).times
                         if (signal !== undefined && signal instanceof Array && signal.every(e => typeof e === "number")) {
@@ -145,7 +145,7 @@ export class SignalMqttClient {
             client.on('message', (topic, buffer) => {
                 try {
                     let message = buffer.toString();
-                    logger.debug(`mqtt received - topic: ${topic}, message: ${message}`);
+                    logger.debug(`mqtt received - topic: ${topic}, message: ${message.substring(0, Math.min(50, message.length))}`);
                     isWaitingForMessage = false;
                     client.end();
 

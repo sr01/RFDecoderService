@@ -5,7 +5,8 @@ import { CodeRepository } from "./CodeRepository";
 import { Callback } from "../../utils/Callback";
 import * as Decoder from "../decode/Decoder";
 import { Levels } from "../decode/Levels";
-import {mainLogger} from '../../app'
+import { mainLogger } from '../../app'
+import { sign } from "crypto";
 
 let logger = mainLogger.child({ label: "CodesReceiveManager" });
 
@@ -24,14 +25,17 @@ export class CodesReceiveManager {
             if (err) {
                 logger.error(`receive error: ${err.message}`);
             } else {
-                logger.debug(`received signal: ${signal}`);
 
-                this.codeRepository.findBySignal(signal!, (err, code) => {
+                let decodeResult = Decoder.decode(signal!, 0, 50);
+
+                logger.debug(`received signal: [${decodeResult.values}]`);
+
+                this.codeRepository.findBySignal(decodeResult.values, (err, code) => {
                     if (err) {
                         logger.error(`failed to find code. Error: ${err}`);
                     } else {
                         if (code) {
-                            logger.debug(`found code: ${code.buttonName}`);
+                            logger.debug(`******************** found code: ${code.buttonName} ********************`);
                             this.mqttClient.publish(code.buttonTopic, "ON")
                         }
                     }
@@ -56,7 +60,7 @@ export class CodesReceiveManager {
                 //2. decode
                 let decodeResult = Decoder.decode(signal!, startLevel, threshold);
                 let code = new Code(buttonName, buttonTopic, startLevel, threshold, decodeResult.values!);
-                
+
                 //3. save code to db
                 this.codeRepository.put(code, (err, code) => {
                     if (err) {

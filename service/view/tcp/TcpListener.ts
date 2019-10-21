@@ -1,4 +1,4 @@
-import { mainLogger } from "../../app";
+import { mainLogger, mqttPublisher } from "../../app";
 import * as Net from 'net';
 
 let logger = mainLogger.child({ label: "TcpListener" })
@@ -79,14 +79,29 @@ export class TcpListener {
         let intIndex = 0;
         for (let i = 0; i < data.length; i += 2) {
             let lowByte = data[i];
-            let highByte = data[i+1];
-            let value = (highByte << 8 ) | lowByte;
+            let highByte = data[i + 1];
+            let value = (highByte << 8) | lowByte;
 
             intArray[intIndex++] = value;
         }
-        
+
         // logger.debug(`processIncomingData: ${data}`)
-        logger.debug(`processIncomingData: ${intArray}`)
+        //logger.debug(`processIncomingData: ${intArray}`)
+
+        let topic = "rds/detect"
+        // let topic = "shmulik/test"
+        let message = 
+        `{
+            "times": [${intArray}]
+        }`
+        
+        mqttPublisher.publish(topic, message, (err, result) => {
+            if (err) {
+                logger.error(`mqtt publish failed, error: ${err.message}`);
+            } else {
+                logger.debug(`mqtt publish successfully`);
+            }
+        });
     }
 
 }

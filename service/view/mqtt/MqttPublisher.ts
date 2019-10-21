@@ -15,16 +15,15 @@ export class MqttPublisher {
         this.settings = ObjectUtils.copy(settings);
     }
 
-    publish(topic: string, messageObject: any, callback : Callback<string>) {
+    publish(topic: string, message: string, callback : Callback<string>) {
         
         let client = mqtt.connect(this.settings);
-        let json = JSON.stringify(messageObject);
-
+        
         client.on('connect', () => {
             logger.debug(`mqtt connected.`)
-            logger.debug(`publish to topic: ${topic}, message: ${json}`)
-
-            client.publish(topic, json, (error?: Error, packet?: Packet)=>{
+            logger.debug(`publish to topic: ${topic}, message: ${message.substring(0, Math.min(50, message.length))}...`)
+            
+            client.publish(topic, message, (error?: Error, packet?: Packet)=>{
                 if(error){
                     logger.error("publish error: " + error.message);
                     callback(error);
