@@ -1,17 +1,60 @@
 {
-    "configurations": [
-        {
-            "name": "Win32",
-            "includePath": [
-                "C:\\Users\\Shmulik\\AppData\\Local\\Arduino15\\packages\\esp8266\\tools\\**",
-                "C:\\Users\\Shmulik\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.5.2\\**"
-            ],
-            "forcedInclude": [],
-            "intelliSenseMode": "msvc-x64",
-            "compilerPath": "C:\\MinGW\\bin\\gcc.exe",
-            "cStandard": "c11",
-            "cppStandard": "c++17"
-        }
-    ],
+    "configurations": [{
+        "name": "Win32",
+        "includePath": [
+            "C:\\Program Files (x86)\\Arduino\\tools\\**",
+            "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\**",
+            "C:/Users/Shmulik/Documents/Arduino/libraries/**",
+            "C:/Users/Shmulik/AppData/Local/Arduino15/packages/esp8266/tools/**",
+            "C:/Users/Shmulik/AppData/Local/Arduino15/packages/esp8266/hardware/esp8266/2.5.2/**",
+            "C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/",
+            "C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/EEPROM/",
+            "C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SPI/",
+            "C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SoftwareSerial/",
+            "C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/",
+            "C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include/",
+            "C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include/avr/",
+            "C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include/compat/",
+            "C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include/util/",
+            "C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/7.3.0/include",
+            "C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/7.3.0/include-fixed",
+            "${workspaceFolder}",
+            "C:\\ProgramFiles(x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino",
+            "C:\\ProgramFiles(x86)\\Arduino\\hardware\\arduino\\avr\\libraries\\SPI\\src",
+            "C:\\ProgramFiles(x86)\\Arduino\\libraries\\Adafruit_GFX-Library",
+            "C:\\ProgramFiles(x86)\\Arduino\\libraries\\Adafruit_ILI9341",
+            "C:\\ProgramFiles(x86)\\Arduino\\libraries\\Adafruit_STMPE610",
+            "C:\\ProgramFiles(x86)\\Arduino\\libraries\\Adafruit_AM2315",
+            "C:\\Users\\Greg\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\samd\\1.6.18\\cores\\arduino",
+            "C:\\ProgramFiles(x86)\\Arduino\\libraries\\SD",
+            "C:\\ProgramFiles(x86)\\Arduino\\hardware\\arduino\\avr\\libraries\\SPI",
+            "C:\\ProgramFiles(x86)\\Arduino\\hardware\\arduino\\avr\\libraries\\Wire"
+        ],
+        "browse": {
+            "limitSymbolsToIncludedHeaders": false,
+            "path": [
+                "${workspaceFolder}",
+                "C:\\ProgramFiles(x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino",
+                "C:\\ProgramFiles(x86)\\Arduino\\hardware\\arduino\\avr\\libraries\\SPI\\src",
+                "C:\\ProgramFiles(x86)\\Arduino\\libraries\\Adafruit_GFX-Library",
+                "C:\\ProgramFiles(x86)\\Arduino\\libraries\\Adafruit_ILI9341",
+                "C:\\ProgramFiles(x86)\\Arduino\\libraries\\Adafruit_STMPE610",
+                "C:\\ProgramFiles(x86)\\Arduino\\libraries\\Adafruit_AM2315",
+                "C:\\Users\\Greg\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\samd\\1.6.18\\cores\\arduino",
+                "C:\\ProgramFiles(x86)\\Arduino\\libraries\\SD",
+                "C:\\ProgramFiles(x86)\\Arduino\\hardware\\arduino\\avr\\libraries\\SPI",
+                "C:\\ProgramFiles(x86)\\Arduino\\hardware\\arduino\\avr\\libraries\\Wire"
+
+            ]
+        },
+        "forcedInclude": [
+            "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h"
+        ],
+        "intelliSenseMode": "msvc-x64",
+        "compilerPath": "C:/MinGW/bin/gcc.exe",
+        "cStandard": "c11",
+        "cppStandard": "c++17",
+        "defines": ["USBCON"]
+    }],
     "version": 4
 }

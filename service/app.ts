@@ -25,6 +25,7 @@ import Settings from './model/settings/Settings';
 import { CodesReceiveManager } from './model/code/CodesReceiveManager';
 import { MqttPublisher } from './view/mqtt/MqttPublisher';
 import mqttRouter from './routes/mqtt';
+import { TcpListener } from './view/tcp/TcpListener';
 
 const REQUEST_TIMEOUT_MILLIS = 30000;
 
@@ -34,6 +35,7 @@ appRoot: ${appRoot}
 Settings: ${Settings.getInstance().toString()}
 `);
 
+let tcpListener = new TcpListener(4000);
 let codesReceiveManager = new CodesReceiveManager();
 let mqttPublisher = new MqttPublisher(Settings.getInstance().mqttClientSettings);
 var app = express();
@@ -44,11 +46,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(function(req, res, next){
-    res.setTimeout(REQUEST_TIMEOUT_MILLIS, function(){
+app.use(function (req, res, next) {
+    res.setTimeout(REQUEST_TIMEOUT_MILLIS, function () {
         console.log('Request has timed out.');
-            res.send(408);
-        });
+        res.send(408);
+    });
 
     next();
 });
@@ -77,4 +79,6 @@ app.use(function (err: any, req: Request, res: Response, next: any) {
 
 codesReceiveManager.start();
 
-export  {app, mainLogger, codesReceiveManager, mqttPublisher};
+tcpListener.start();
+
+export { app, mainLogger, codesReceiveManager, mqttPublisher };
