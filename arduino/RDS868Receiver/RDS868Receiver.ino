@@ -80,50 +80,11 @@ void handleInterrupt()
   }
 }
 
-void sendEndOfChunks(){
-  client.println(0);
-  client.println();
-}
-
 void resetBuffer()
 {
   for (unsigned int i = 0; i < SAMPLESIZE; i++)
   {
     timings[i] = 0;
-  }
-}
-
-void sendNumberAsChunk(int num, boolean isLast){
-  String numString = String(num);
-  String chunk = isLast ? numString : numString + ",";
-  sendChunk(chunk);
-}
-
-void sendChunk(String chunk){
-  String octets = String(chunk.length(), HEX);
-  //Serial.println(octets);
-  //Serial.println(chunk);
-  
-  client.println(octets);
-  client.println(chunk);
-}
-
-void beginHttpRequest(){
-      Serial.println("Connecting...");
-      client.println(F("POST /mqtt/publish HTTP/1.1"));
-      client.println(F("Host: arduino.cc"));
-      client.println("Connection: close");
-      client.println("Content-Type: application/json");
-      client.println("Transfer-Encoding: chunked");
-      client.println();
-}
-
-void readHttpResponse(){
-  // if there's incoming data from the net connection send it out the serial port
-  // this is for debugging purposes only
-  while (client.available()) {
-    char c = client.read();
-    Serial.write(c);
   }
 }
 
@@ -135,51 +96,47 @@ boolean isRFReceived(){
         break;
       }
   }
-
   return result;
+}
+
+void beginSend(){
+  
+}
+
+void sendTiming(int timing, boolean isLast){
+  Serial.print(timing);
+  if(!isLast){
+    Serial.print(",");
+  }
+}
+
+void endSend(){
+  Serial.println("");
 }
 
 void loop()
 {
     attachInterrupt(interruptPin, handleInterrupt, CHANGE);
     Serial.println("reading");
-    delay(100);
+    delay(1000);
     detachInterrupt(interruptPin);
 
     if(isRFReceived()){
-        // send the HTTP POST request
-        String head =  "{\"topic\":\"abc\", \"message\": {\"times\":[";
-        String tail = "]}}";
-    
-        // close any connection before send a new request
-        // this will free the socket on the WiFi shield
-        client.stop();
-    
-        // if there's a successful connection
-        if (client.connect(server, 3000)) {
-    
-          beginHttpRequest();
-          sendChunk(head);
-                
-          int finalstate = digitalRead(receiverPin);
-          for (unsigned int i = pos + finalstate; i < SAMPLESIZE; i++)
-          {
-            sendNumberAsChunk(timings[i], pos==0);
-          }
-      
-          for (unsigned int i = 0; i < pos; i++)
-          {
-            sendNumberAsChunk(timings[i], i==pos-1);
-          }
-    
-          sendChunk(tail);
-          sendEndOfChunks();
-        }
-        else{
-          Serial.println("failed to connect");
-        }
 
-        //readHttpResponse();
+      beginSend();
+      
+      int finalstate = digitalRead(receiverPin);
+      for (unsigned int i = pos + finalstate; i < SAMPLESIZE; i++)
+      {
+        sendTiming(timings[i], pos==0);
+      }
+  
+      for (unsigned int i = 0; i < pos; i++)
+      {
+        sendTiming(timings[i], i==pos-1);
+      }  
+
+      endSend();
     }
     resetBuffer();
 }
