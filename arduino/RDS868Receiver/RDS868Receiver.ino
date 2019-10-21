@@ -1,5 +1,6 @@
 #include <ELECHOUSE_CC1101_RCS_DRV.h>
 #include "WiFiEsp.h"
+#include "WiFiEspUdp.h"
 
 // RF receive setup
 #define SAMPLESIZE 400
@@ -33,6 +34,9 @@ void callback(char* topic, byte* payload, unsigned int length) {
 // Initialize the wifi client object
 WiFiEspClient client;
 char server[] = "192.168.15.106";
+int serverPort = 33333;
+
+WiFiEspUDP Udp;
 
 void setup()
 {
@@ -100,7 +104,19 @@ boolean isRFReceived(){
 }
 
 void beginSend(){
+  byte buffer[]= {1,2,3};
   
+  Serial.print("open udp connection, result: ");
+  int result = Udp.beginPacket(server, serverPort); 
+  Serial.println(result);
+
+  Serial.print("write to udp connection, result: ");
+  result = Udp.write(buffer, 3);
+  Serial.println(result);
+
+  Serial.print("close udp connection, result: ");
+  result = Udp.endPacket();
+  Serial.println(result);
 }
 
 void sendTiming(int timing, boolean isLast){
